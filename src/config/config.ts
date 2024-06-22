@@ -1,20 +1,8 @@
 import dotenv from "dotenv";
+import { Config } from "./../types";
 
 // Load environment variables from .env file
 dotenv.config();
-
-interface Config {
-  db: {
-    host: string;
-    user: string;
-    password: string;
-    database: string;
-    port: number;
-  };
-  jwtSecretKey: string;
-  adjutorApiUrl: string;
-  serverPort: number;
-}
 
 const config: Config = {
   db: {

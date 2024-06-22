@@ -3,6 +3,7 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -21,5 +22,10 @@
       "@app/common": ["libs/common/src"],
       "@app/common/*": ["libs/common/src/*"]
     }
-  }
+  },
+  "include": [
+    "src",
+    "src/index.d.ts", // Ensure this is correctly included
+    "src/types/express.d.ts"
+  ]
 }

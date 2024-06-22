@@ -1,18 +1,17 @@
 import { Knex } from "knex";
-import dotenv from "dotenv";
+import config from "../config/config";
 
 // Load environment variables from .env file
-dotenv.config();
 
 const knexConfig: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
     connection: {
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: Number(process.env.DB_PORT) || 3306,
+      host: config.db.host,
+      user: config.db.user,
+      password: config.db.password,
+      database: config.db.database,
+      port: config.db.port || 3306,
     },
     pool: {
       min: 2,
@@ -30,11 +29,11 @@ const knexConfig: { [key: string]: Knex.Config } = {
   production: {
     client: "mysql2",
     connection: {
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: Number(process.env.DB_PORT) || 3306,
+      host: config.db.host,
+      user: config.db.user,
+      password: config.db.password,
+      database: config.db.database,
+      port: config.db.port || 3306,
     },
     pool: {
       min: 2,

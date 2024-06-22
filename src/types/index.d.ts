@@ -1,4 +1,5 @@
 // types/index.d.ts
+import { Request } from "express";
 
 // The User type
 export interface User {
@@ -43,4 +44,27 @@ export interface TransactionRequestBody {
   type: "fund" | "transfer" | "withdraw";
   amount: number;
   recipient_id?: number;
+}
+
+// A type for the request body when verifying a user's email
+export interface VerifyEmailRequestBody {
+  email: string;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: User;
+  userId?: number; // Add userId to the request interface
+}
+
+export interface Config {
+  db: {
+    host: string;
+    user: string;
+    password: string;
+    database: string;
+    port: number;
+  };
+  jwtSecretKey: string;
+  adjutorApiUrl: string;
+  serverPort: number;
 }
