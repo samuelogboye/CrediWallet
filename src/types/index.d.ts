@@ -9,6 +9,9 @@ export interface User {
   password: string;
   account_number: string;
   balance: number;
+  is_admin: boolean;
+  is_blocked: boolean;
+  is_email_confirmed: boolean;
   created_at: Date;
 }
 

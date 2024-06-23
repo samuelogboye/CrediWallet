@@ -1,12 +1,19 @@
-// Define the schema for the user table
 export const userSchema = {
-  id: "number",
-  name: "string",
-  email: "string",
-  password: "string",
-  account_number: "string",
-  balance: "number",
-  created_at: "date",
+  id: { type: "increments", primary: true },
+  name: { type: "string", maxLength: 100, notNullable: true },
+  email: { type: "string", maxLength: 100, unique: true, notNullable: true },
+  password: { type: "string", maxLength: 100, notNullable: true },
+  account_number: {
+    type: "string",
+    maxLength: 100,
+    unique: true,
+    notNullable: true,
+  },
+  balance: { type: "decimal", precision: 10, scale: 2, defaultTo: 0.0 },
+  created_at: { type: "timestamp", defaultTo: "now" },
+  is_admin: { type: "boolean", defaultTo: false },
+  is_blocked: { type: "boolean", defaultTo: false },
+  is_email_confirmed: { type: "boolean", defaultTo: false },
 };
 
 // Automatically get the allowed fields
