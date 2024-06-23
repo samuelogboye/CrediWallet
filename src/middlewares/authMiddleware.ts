@@ -59,9 +59,6 @@ export const authenticate = async (
   try {
     const decoded: any = jwt.verify(token, config.jwtSecretKey);
 
-    // Attach the user ID to the AuthenticatedRequest object
-    // req.user.id = decoded.userId;
-
     // Optionally, retrieve and attach the user object to the AuthenticatedRequest
     const user = await getUserById(decoded.userId);
 
@@ -72,7 +69,6 @@ export const authenticate = async (
     req.user = user;
     next();
   } catch (error) {
-    console.log("error in authenticate", error);
     return next(new ApiError(401, "Invalid or expired token"));
   }
 };

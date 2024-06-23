@@ -7,10 +7,13 @@ import {
 } from "../controllers/adminController";
 import { authenticate } from "../middlewares/authMiddleware";
 import { validateAdmin } from "../middlewares/validateAdmin";
+import { getAllUsersController } from "src/controllers/userController";
 
 const router = Router();
 
 // Routes for admin operations
+// Route to get all users
+router.get("/get-users", authenticate, validateAdmin, getAllUsersController);
 router.put("/block/:userId", authenticate, validateAdmin, blockUserController);
 router.put(
   "/unblock/:userId",
