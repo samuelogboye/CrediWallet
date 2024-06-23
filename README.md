@@ -9,3 +9,12 @@ npx ts-node src/server.ts
 
 Using Compiled JavaScript Files
 node dist/server.js
+
+for migration
+npx knex migrate:make create_users_table --knexfile src/config/knexfile.ts --env development
+npx knex migrate:make create_transactions_table --knexfile src/config/knexfile.ts --env development
+
+Run Migrations
+
+Run the migrations to create the tables:
+npx knex migrate:latest --knexfile src/config/knexfile.ts --env development

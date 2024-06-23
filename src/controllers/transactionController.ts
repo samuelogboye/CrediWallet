@@ -7,17 +7,16 @@ import {
 } from "../models/transactionModel";
 import { getUserById, updateUserBalance } from "../models/userModel";
 import ApiError from "../middlewares/errorHandler";
-import { TransactionRequestBody } from "../types";
+import { AuthenticatedRequest, TransactionRequestBody } from "../types";
 
 // Controller to create a new transaction
 export const createTransactionController = async (
-  req: Request<{}, {}, TransactionRequestBody>,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const { type, amount, recipient_id } = req.body;
-  const userId = 22; //req.user?.id; // Assuming user ID is attached to req.user by an authentication middleware
-
+  const { type, amount, recipient_id } = req.body as TransactionRequestBody;
+  const userId = req.user.id;
   try {
     // Check if user exists
     const user = await getUserById(userId);
@@ -75,11 +74,11 @@ export const createTransactionController = async (
 
 // Controller to get transaction history for a user
 export const getTransactionHistory = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const userId = 22; //req.user.id; // Assuming user ID is attached to req.user by an authentication middleware
+  const userId = req.user.id;
   const { page = 1, limit = 10 } = req.query;
 
   try {

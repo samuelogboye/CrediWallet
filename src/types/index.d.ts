@@ -7,6 +7,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
+  account_number: string;
   balance: number;
   created_at: Date;
 }
@@ -21,10 +22,16 @@ export interface Transaction {
   created_at: Date;
 }
 
-// A type for the response of the Lendsqr Adjutor Karma blacklist API
-export interface BlacklistResponse {
-  isBlacklisted: boolean;
+export interface AuthBody {
+  name: string;
+  email: string;
+  password: string;
 }
+
+// A type for the response of the Lendsqr Adjutor Karma blacklist API
+// export interface BlacklistResponse {
+//   isBlacklisted: boolean;
+// }
 
 // A type for the request body when registering a user
 export interface RegisterRequestBody {
@@ -50,12 +57,6 @@ export interface TransactionRequestBody {
 export interface VerifyEmailRequestBody {
   email: string;
 }
-
-export interface AuthenticatedRequest extends Request {
-  user?: User;
-  userId?: number; // Add userId to the request interface
-}
-
 export interface Config {
   db: {
     host: string;
@@ -64,7 +65,20 @@ export interface Config {
     database: string;
     port: number;
   };
+  adjutor: {
+    apiUrl: string;
+    apiKey: string;
+  };
   jwtSecretKey: string;
-  adjutorApiUrl: string;
   serverPort: number;
 }
+
+export interface AuthenticatedRequest extends Request {
+  user?: User;
+  //   body: AuthBody;
+}
+
+// export interface TransactionRequest extends Request {
+//   user?: User;
+//   //   body: TransactionRequestBody;
+// }

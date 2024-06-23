@@ -1,8 +1,6 @@
 import { Knex } from "knex";
 import config from "../config/config";
 
-// Load environment variables from .env file
-
 const knexConfig: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
@@ -11,7 +9,7 @@ const knexConfig: { [key: string]: Knex.Config } = {
       user: config.db.user,
       password: config.db.password,
       database: config.db.database,
-      port: config.db.port || 3306,
+      port: config.db.port,
     },
     pool: {
       min: 2,
@@ -19,10 +17,10 @@ const knexConfig: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: "knex_migrations",
-      directory: "./src/migrations",
+      directory: "../migrations",
     },
     seeds: {
-      directory: "./src/seeds",
+      directory: "../seeds",
     },
   },
 
@@ -33,7 +31,7 @@ const knexConfig: { [key: string]: Knex.Config } = {
       user: config.db.user,
       password: config.db.password,
       database: config.db.database,
-      port: config.db.port || 3306,
+      port: config.db.port,
     },
     pool: {
       min: 2,
@@ -41,10 +39,10 @@ const knexConfig: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: "knex_migrations",
-      directory: "./src/migrations",
+      directory: "../migrations",
     },
     seeds: {
-      directory: "./src/seeds",
+      directory: "../seeds",
     },
   },
 };

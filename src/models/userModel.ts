@@ -34,3 +34,34 @@ export const updateUser = async (
 ): Promise<void> => {
   await knex("users").where({ id }).update(updatedFields);
 };
+
+// Function to delete a user record
+export const deleteUser = async (id: number): Promise<void> => {
+  await knex("users").where({ id }).del();
+};
+
+// Function to get a user by account number
+export const getUserByAccountNumber = async (
+  accountNumber: string
+): Promise<User | undefined> => {
+  return await knex("users").where({ account_number: accountNumber }).first();
+};
+
+// Function to get all users
+export const getAllUsers = async (): Promise<User[]> => {
+  return await knex("users");
+};
+
+// Function to generate a unique account number
+export const generateAccountNumber = async (): Promise<string> => {
+  let accountNumber;
+  let userWithAccountNumber;
+
+  do {
+    // Generate a random 10-digit number starting with 1
+    accountNumber = `1${Math.floor(Math.random() * 9000000000 + 1000000000)}`;
+    userWithAccountNumber = await getUserByAccountNumber(accountNumber);
+  } while (userWithAccountNumber);
+
+  return accountNumber;
+};
