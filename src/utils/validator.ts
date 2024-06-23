@@ -5,6 +5,7 @@ import {
   LoginRequestBody,
   TransactionRequestBody,
 } from "../types";
+import ApiError from "src/middlewares/errorHandler";
 
 export const validateRegister = (
   req: Request,
@@ -57,4 +58,21 @@ export const validateTransaction = (
     return res.status(400).json({ error: error.details[0].message });
   }
   next();
+};
+
+export const validateUpdateFields = (
+  fields: string[],
+  restrictedFields: string[],
+  next: NextFunction
+) => {
+  const restricted = fields.filter((field) => restrictedFields.includes(field));
+  if (restricted.length > 0) {
+    const errorFields = restricted.join(", ");
+    return next(
+      new ApiError(
+        400,
+        `Field(s) ${errorFields} cannot be changed, contact admin`
+      )
+    );
+  }
 };

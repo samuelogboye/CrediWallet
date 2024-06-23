@@ -40,16 +40,16 @@ export const deleteUser = async (id: number): Promise<void> => {
   await knex("users").where({ id }).del();
 };
 
+// Function to get all users
+export const getAllUsers = async (): Promise<User[]> => {
+  return await knex("users");
+};
+
 // Function to get a user by account number
 export const getUserByAccountNumber = async (
   accountNumber: string
 ): Promise<User | undefined> => {
   return await knex("users").where({ account_number: accountNumber }).first();
-};
-
-// Function to get all users
-export const getAllUsers = async (): Promise<User[]> => {
-  return await knex("users");
 };
 
 // Function to generate a unique account number
@@ -58,8 +58,11 @@ export const generateAccountNumber = async (): Promise<string> => {
   let userWithAccountNumber;
 
   do {
-    // Generate a random 10-digit number starting with 1
-    accountNumber = `1${Math.floor(Math.random() * 9000000000 + 1000000000)}`;
+    /// Generate a random 9-digit number and prepend '1' to make it a 10-digit number
+    const randomNineDigitNumber = Math.floor(
+      Math.random() * 900000000 + 100000000
+    );
+    accountNumber = `1${randomNineDigitNumber}`;
     userWithAccountNumber = await getUserByAccountNumber(accountNumber);
   } while (userWithAccountNumber);
 

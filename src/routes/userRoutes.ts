@@ -4,6 +4,7 @@ import {
   updateUserDetailsController,
   deleteUserController,
   getAllUsersController,
+  getUserByAccountNumberontroller,
 } from "../controllers/userController";
 import { authenticate } from "../middlewares/authMiddleware";
 
@@ -20,5 +21,12 @@ router.put("/me", authenticate, updateUserDetailsController);
 
 // Route to delete user account
 router.delete("/me", authenticate, deleteUserController);
+
+// Route to get Users name using account number
+router.get(
+  "/account/:accountNumber",
+  authenticate,
+  getUserByAccountNumberontroller
+);
 
 export default router;
