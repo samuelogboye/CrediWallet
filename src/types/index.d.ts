@@ -76,12 +76,10 @@ export interface Config {
   serverPort: number;
 }
 
-export interface AuthenticatedRequest extends Request {
-  user?: User;
-  //   body: AuthBody;
-}
+// Define a type that omits the password field from User
+export type SafeUser = Omit<User, "password">;
 
-// export interface TransactionRequest extends Request {
-//   user?: User;
-//   //   body: TransactionRequestBody;
-// }
+// Define the AuthenticatedRequest interface
+export interface AuthenticatedRequest extends Request {
+  user?: SafeUser;
+}

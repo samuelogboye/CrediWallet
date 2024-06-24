@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { getUserById } from "../models/userModel";
 import ApiError from "./errorHandler";
 import config from "../config/config";
-import { AuthenticatedRequest } from "src/types";
+import { AuthenticatedRequest, SafeUser } from "src/types";
 
 export const checkBlacklist = async (
   req: AuthenticatedRequest,
@@ -66,7 +66,10 @@ export const authenticate = async (
       return next(new ApiError(404, "User not found"));
     }
 
-    req.user = user;
+    // Omit the password field
+    const { password, ...safeUser } = user;
+
+    req.user = safeUser as SafeUser;
     next();
   } catch (error) {
     return next(new ApiError(401, "Invalid or expired token"));

@@ -45,13 +45,11 @@ export const registerController = async (
     // Generate a JWT token
     const token = jwt.sign({ userId, email }, SECRET_KEY, { expiresIn: "1h" });
 
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        token,
-        UserData: { name, email, accountNumber },
-      });
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      UserData: { name, email, accountNumber },
+    });
   } catch (error) {
     next(new ApiError(500, `Error registering user`));
   }

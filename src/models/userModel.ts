@@ -8,15 +8,23 @@ export const createUser = async (user: Partial<User>): Promise<number> => {
 };
 
 // Function to get a user by ID
-export const getUserById = async (id: number): Promise<User> => {
+export const getUserById = async (id: number): Promise<Partial<User>> => {
   const user = await knex("users").where({ id }).first();
-  return user;
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+  return null; // Return null if the user is not found
 };
 
 // Function to get a user by email
-export const getUserByEmail = async (email: string): Promise<User> => {
+export const getUserByEmail = async (email: string): Promise<Partial<User>> => {
   const user = await knex("users").where({ email }).first();
-  return user;
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+  return null; // Return null if the user is not found
 };
 
 // Function to update a user's balance
