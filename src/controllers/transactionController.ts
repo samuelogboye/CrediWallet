@@ -89,7 +89,12 @@ export const getTransactionHistory = async (
       offset
     );
 
-    res.status(200).json(transactions);
+    res.status(200).json({
+      message: "Transaction history retrieved successfully",
+      userData: req.user,
+      transactionCount: transactions.length,
+      transactions,
+    });
   } catch (error) {
     next(new ApiError(500, "Error fetching transaction history"));
   }
