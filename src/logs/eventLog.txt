@@ -1,0 +1,16 @@
+20240626	00:04:32	a8c6de80-173f-4a46-a954-937ccc250dd9	Custom event logged in exampleController
+20240626	00:08:49	00ab5000-db77-41fc-a96e-37395109298c	Custom event logged in exampleController
+20240626	00:09:53	d70061f3-aaac-42a9-9228-2cdd28535a3d	Custom event logged in exampleController
+20240626	00:10:29	c2e3daee-91b0-4bba-a07e-79087d8d6b02	Custom event logged in exampleController
+20240626	00:10:57	9e19736c-54b9-4a07-a763-f6f34e4b5422	Custom event logged in exampleController
+20240626	00:11:47	244abcd0-c8ca-4c6a-b7dc-93115c8d0396	Custom event logged in exampleController
+20240626	00:12:13	dea41edb-073a-42b4-a6b0-0c214dfa82ec	Custom event logged in exampleController
+20240626	00:14:13	7473257c-0de9-4089-b61a-fe0dbcd16d42	Custom event logged in exampleController
+20240626	00:19:32	c8f699f3-72e6-467d-b42b-5168a7515bd6	Custom event logged in exampleController
+20240626	00:20:28	9272750b-c3a5-40fc-9b8a-41f38cd5f6f3	Custom event logged in exampleController
+20240626	00:21:32	7b50e996-b26a-4667-80cb-e02312f33753	Custom event logged in exampleController
+20240626	00:22:24	b02eaf3c-85b7-4532-8394-78b497d26cbc	Custom event logged in exampleController
+20240626	00:24:07	c5fab174-e60d-4a94-bc05-604198297ea3	Negative amount detected
+20240626	00:25:48	5949dbdb-5725-49c0-84ab-b5c7422bf3ba	Negative amount detected
+20240626	00:27:02	7e43cb55-72d6-4c84-8a49-4da833353765	Negative amount detected
+20240626	00:27:05	1d57e5f9-df54-459f-87c9-fb0159860966	Negative amount detected
