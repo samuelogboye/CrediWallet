@@ -13,6 +13,7 @@ export interface User {
   is_blocked: boolean;
   is_email_confirmed: boolean;
   created_at: Date;
+  updated_at: Date;
 }
 
 // The Transaction type
@@ -20,7 +21,11 @@ export interface Transaction {
   id: number;
   user_id: number;
   type: "fund" | "transfer" | "withdraw";
-  amount: number;
+  money_out: number;
+  money_in: number;
+  description: string;
+  recipient_to_from: string;
+  balance: number;
   recipient_id?: number;
   created_at: Date;
 }
@@ -30,11 +35,6 @@ export interface AuthBody {
   email: string;
   password: string;
 }
-
-// A type for the response of the Lendsqr Adjutor Karma blacklist API
-// export interface BlacklistResponse {
-//   isBlacklisted: boolean;
-// }
 
 // A type for the request body when registering a user
 export interface RegisterRequestBody {
@@ -54,6 +54,9 @@ export interface TransactionRequestBody {
   type: "fund" | "transfer" | "withdraw";
   amount: number;
   recipient_id?: number;
+  recipient_account_number?: string;
+  recipient_email?: string;
+  description?: string;
 }
 
 // A type for the request body when verifying a user's email
@@ -82,4 +85,12 @@ export type SafeUser = Omit<User, "password">;
 // Define the AuthenticatedRequest interface
 export interface AuthenticatedRequest extends Request {
   user?: SafeUser;
+}
+
+export interface LogEvents {
+  (message: string, logName: string): Promise<void>;
+}
+
+export interface Logger {
+  (req: Request, res: Response, next: NextFunction): void;
 }

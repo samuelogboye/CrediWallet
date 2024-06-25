@@ -18,11 +18,18 @@ export const getUserById = async (id: number): Promise<Partial<User>> => {
 };
 
 // Function to get a user by email
-export const getUserByEmail = async (email: string): Promise<Partial<User>> => {
+export const getUserByEmail = async (
+  email: string,
+  isPasswordNeeded: boolean = false
+): Promise<Partial<User> | null> => {
   const user = await knex("users").where({ email }).first();
   if (user) {
-    const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+    if (isPasswordNeeded) {
+      return user; // Return the full user object, including password
+    } else {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword; // Return the user object without password
+    }
   }
   return null; // Return null if the user is not found
 };
