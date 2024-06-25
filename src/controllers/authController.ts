@@ -64,12 +64,11 @@ export const loginController = async (
   const { email, password } = req.body as AuthBody;
 
   try {
-    const user = await getUserByEmail(email);
+    const user = await getUserByEmail(email, true);
 
     if (!user) {
       return next(new ApiError(404, "User not found"));
     }
-
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
@@ -82,6 +81,7 @@ export const loginController = async (
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
+    console.log("error", error);
     return next(new ApiError(500, "Error logging in user"));
   }
 };

@@ -10,13 +10,6 @@ import { authenticate } from "../middlewares/authMiddleware"; // Assuming you ha
 
 const router = Router();
 
-// // Route to create a new transaction
-// router.post(
-//   "/",
-//   authenticate,
-//   validateTransaction,
-//   createTransactionController
-// );
 // Route to fund an account
 router.post("/fund", authenticate, fundAccountController);
 
