@@ -15,7 +15,7 @@ transferEventEmitter.on("transferMade", async (sender, recipient, amount) => {
       amount,
       recipient: recipient.name || recipient.email || recipient.account_number,
     },
-    template: "transferNotificationSender.ejs", // Make sure this template exists
+    template: "transferNotificationSender.ejs",
   };
 
   const recipientEmailOptions = {
@@ -29,7 +29,7 @@ transferEventEmitter.on("transferMade", async (sender, recipient, amount) => {
       amount,
       sender: sender.name || sender.email || sender.account_number,
     },
-    template: "transferNotificationRecipient.ejs", // Make sure this template exists
+    template: "transferNotificationRecipient.ejs",
   };
 
   await emailService.sendEmail(senderEmailOptions);
