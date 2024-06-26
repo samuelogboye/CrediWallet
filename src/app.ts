@@ -8,12 +8,13 @@ import transactionRoutes from "./routes/transactionRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import "./events/transferHandler";
 import "./events/userEventHandler";
+import { requestLogger } from "./middlewares/logger";
 // import logger from "./middlewares/logEvents";
 
 const app = express();
 
-// custom middleware logger
-// app.use(logger);
+// Use the logger middleware
+app.use(requestLogger);
 
 // Cross Origin Resource Sharing
 // app.use(cors(corsOptions));
