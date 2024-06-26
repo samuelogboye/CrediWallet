@@ -15,6 +15,8 @@ import {
 import ApiError from "../middlewares/errorHandler";
 import { AuthenticatedRequest, TransactionRequestBody, User } from "../types";
 import { logEvents } from "src/middlewares/logEvents";
+import { validateAmount } from "src/utils/validator";
+import transferEventEmitter from "src/events/transferEvents";
 
 // // Controller to create a new transaction
 // // Controller to create a new transaction
@@ -117,6 +119,9 @@ export const fundAccountController = async (
       return next(new ApiError(404, "User not found"));
     }
 
+    // Validate amount
+    await validateAmount(amount, userId, next);
+
     // Fund account
     await updateUserBalance(userId, user.balance + amount);
 
@@ -159,11 +164,8 @@ export const transferController = async (
       return next(new ApiError(404, "User not found"));
     }
 
-    // if amount is a negative value throw error and log a trigger alert with the senders user id
-    if (amount < 0) {
-      await logEvents("Negative amount detected", "eventLog.txt");
-      return next(new ApiError(400, "Invalid amount"));
-    }
+    // Validate amount
+    await validateAmount(amount, userId, next);
 
     let recipient: Partial<User>;
     let recipientIdentifier;
@@ -246,6 +248,9 @@ export const transferController = async (
 
     const transaction = await getTransactionById(senderTransactionId);
 
+    // Emit transfer event
+    transferEventEmitter.emit("transferMade", user, recipient, amount);
+
     res.status(201).json({
       message: "Transfer successful",
       transaction,
@@ -271,6 +276,9 @@ export const withdrawController = async (
     if (!user) {
       return next(new ApiError(404, "User not found"));
     }
+
+    // Validate amount
+    await validateAmount(amount, userId, next);
 
     // Check for sufficient funds
     if (user.balance < amount) {

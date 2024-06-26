@@ -6,6 +6,7 @@ import {
   TransactionRequestBody,
 } from "../types";
 import ApiError from "src/middlewares/errorHandler";
+import { logEvents } from "src/middlewares/logEvents";
 
 export const validateRegister = (
   req: Request,
@@ -73,6 +74,57 @@ export const validateUpdateFields = (
         400,
         `Field(s) ${errorFields} cannot be changed, contact admin`
       )
+    );
+  }
+};
+
+export const validateAmount = async (
+  amount: number,
+  userId: number,
+  next: NextFunction
+): Promise<void> => {
+  if (typeof amount !== "number" || isNaN(amount)) {
+    await logEvents(
+      `Invalid amount detected for user ID: ${userId}`,
+      "eventLog.txt"
+    );
+    return next(new ApiError(400, "Amount must be a number"));
+  }
+
+  if (amount <= 0) {
+    await logEvents(
+      `Non-positive amount detected for user ID: ${userId}`,
+      "eventLog.txt"
+    );
+    return next(new ApiError(400, "Amount must be greater than zero"));
+  }
+
+  const minimumAmount = 1; // Define a minimum amount if necessary
+  if (amount < minimumAmount) {
+    await logEvents(
+      `Amount below minimum threshold detected for user ID: ${userId}`,
+      "eventLog.txt"
+    );
+    return next(new ApiError(400, `Amount must be at least ${minimumAmount}`));
+  }
+
+  const maximumAmount = 10000; // Define a maximum amount if necessary
+  if (amount > maximumAmount) {
+    await logEvents(
+      `Amount above maximum threshold detected for user ID: ${userId}`,
+      "eventLog.txt"
+    );
+    return next(new ApiError(400, `Amount must not exceed ${maximumAmount}`));
+  }
+
+  const decimalPlaces = (amount.toString().split(".")[1] || "").length;
+  if (decimalPlaces > 2) {
+    await logEvents(
+      `Amount with excessive decimal places detected for user ID: ${userId}`,
+      "eventLog.txt"
+    );
+    return next(
+      new ApiError(400, "Amount must not have more than two decimal places")
     );
   }
 };
