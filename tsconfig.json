@@ -26,5 +26,5 @@
       "@app/common/*": ["libs/common/src/*"]
     }
   },
-  "include": ["src/**/*", "@types/**/*.d.ts"]
+  "include": ["src", "@types/**/*.d.ts"]
 }
