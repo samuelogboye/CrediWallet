@@ -94,3 +94,11 @@ export interface LogEvents {
 export interface Logger {
   (req: Request, res: Response, next: NextFunction): void;
 }
+
+export interface EmailOptions {
+  subject: string;
+  recipientList: string[];
+  message?: string;
+  context?: Record<string, any>;
+  template?: string;
+}

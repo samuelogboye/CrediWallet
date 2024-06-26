@@ -14,3 +14,9 @@
 20240626	00:25:48	5949dbdb-5725-49c0-84ab-b5c7422bf3ba	Negative amount detected
 20240626	00:27:02	7e43cb55-72d6-4c84-8a49-4da833353765	Negative amount detected
 20240626	00:27:05	1d57e5f9-df54-459f-87c9-fb0159860966	Negative amount detected
+20240626	07:11:09	92e216d1-cccd-45bd-98bb-5d24fba507d7	Amount above maximum threshold detected for user ID: 7
+20240626	07:11:23	7116b690-cf28-4e64-b541-6b4c27e06b77	Non-positive amount detected for user ID: 7
+20240626	07:11:35	e0d88317-7ccd-4f0a-b303-67d813eb931a	Amount below minimum threshold detected for user ID: 7
+20240626	07:11:54	6da32ea4-67d0-46c6-8864-2f2d7b9466d6	Amount below minimum threshold detected for user ID: 7
+20240626	07:12:06	01b3e889-ad93-40bc-9e16-6fffd4d3d2c7	Invalid amount detected for user ID: 7
+20240626	07:12:17	3fb94423-34bd-44c1-b1fc-42ec3927f196	Amount with excessive decimal places detected for user ID: 7

@@ -6,6 +6,8 @@ import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import adminRoutes from "./routes/adminRoutes";
+import "./events/transferHandler";
+import "./events/userEventHandler";
 // import logger from "./middlewares/logEvents";
 
 const app = express();
