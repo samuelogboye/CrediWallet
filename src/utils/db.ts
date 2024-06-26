@@ -1,9 +1,10 @@
 import Knex from "knex";
 import knexConfig from "../config/knexfile";
+import config from "../config/config";
 
-const environment = process.env.NODE_ENV;
-const config = knexConfig[environment];
+const environment = config.environment;
+const configuration = knexConfig[environment];
 
-const knex = Knex(config);
+const knex = Knex(configuration);
 
 export default knex;

@@ -18,6 +18,8 @@ const config: Config = {
     apiKey: process.env.ADJUTOR_API_KEY,
   },
   serverPort: Number(process.env.PORT),
+  secretKey: process.env.SECRET_KEY,
+  environment: process.env.NODE_ENV,
 };
 
 export default config;
