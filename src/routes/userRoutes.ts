@@ -3,7 +3,7 @@ import {
   getUserDetailsController,
   updateUserDetailsController,
   deleteUserController,
-  getUserByAccountNumberontroller,
+  getUserByAccountNumberController,
 } from "../controllers/userController";
 import { authenticate } from "../middlewares/authMiddleware";
 
@@ -22,7 +22,7 @@ router.delete("/me", authenticate, deleteUserController);
 router.get(
   "/account/:accountNumber",
   authenticate,
-  getUserByAccountNumberontroller
+  getUserByAccountNumberController
 );
 
 export default router;
