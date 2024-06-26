@@ -6,7 +6,7 @@ import {
   TransactionRequestBody,
 } from "../types";
 import ApiError from "src/middlewares/errorHandler";
-import { logEvents } from "src/middlewares/logEvents";
+import logger from "../config/logger";
 
 export const validateRegister = (
   req: Request,
@@ -84,7 +84,7 @@ export const validateAmount = async (
   next: NextFunction
 ): Promise<void> => {
   if (typeof amount !== "number" || isNaN(amount)) {
-    await logEvents(
+    logger.info(
       `Invalid amount detected for user ID: ${userId}`,
       "eventLog.txt"
     );
@@ -92,7 +92,7 @@ export const validateAmount = async (
   }
 
   if (amount <= 0) {
-    await logEvents(
+    logger.info(
       `Non-positive amount detected for user ID: ${userId}`,
       "eventLog.txt"
     );
@@ -101,7 +101,7 @@ export const validateAmount = async (
 
   const minimumAmount = 1; // Define a minimum amount if necessary
   if (amount < minimumAmount) {
-    await logEvents(
+    logger.info(
       `Amount below minimum threshold detected for user ID: ${userId}`,
       "eventLog.txt"
     );
@@ -110,7 +110,7 @@ export const validateAmount = async (
 
   const maximumAmount = 10000; // Define a maximum amount if necessary
   if (amount > maximumAmount) {
-    await logEvents(
+    logger.info(
       `Amount above maximum threshold detected for user ID: ${userId}`,
       "eventLog.txt"
     );
@@ -119,7 +119,7 @@ export const validateAmount = async (
 
   const decimalPlaces = (amount.toString().split(".")[1] || "").length;
   if (decimalPlaces > 2) {
-    await logEvents(
+    logger.info(
       `Amount with excessive decimal places detected for user ID: ${userId}`,
       "eventLog.txt"
     );
