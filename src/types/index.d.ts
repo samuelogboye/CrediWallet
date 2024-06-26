@@ -77,6 +77,8 @@ export interface Config {
   };
   jwtSecretKey: string;
   serverPort: number;
+  secretKey: string;
+  environment: string;
 }
 
 // Define a type that omits the password field from User
