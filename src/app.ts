@@ -9,7 +9,6 @@ import adminRoutes from "./routes/adminRoutes";
 import "./events/transferHandler";
 import "./events/userEventHandler";
 import { requestLogger } from "./middlewares/logger";
-// import logger from "./middlewares/logEvents";
 
 const app = express();
 
