@@ -4,3 +4,4 @@ env
 .env
 package-lock.json
 app.log
+coverage

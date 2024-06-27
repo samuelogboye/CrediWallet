@@ -1,18 +1,20 @@
 import knex from "../utils/db";
-import { Transaction } from "../types";
+import { Transaction as TransactionType } from "../types";
+import { Knex } from "knex";
 
 // Function to create a transaction
 export const createTransaction = async (
-  transaction: Partial<Transaction>
+  transaction: Partial<TransactionType>,
+  trx?: Knex.Transaction
 ): Promise<number> => {
-  const [id] = await knex("transactions").insert(transaction);
+  const [id] = await knex("transactions").transacting(trx).insert(transaction);
   return id;
 };
 
 // Function to get transactions by user ID
 export const getTransactionsByUserId = async (
   userId: number
-): Promise<Transaction[]> => {
+): Promise<Knex.Transaction[]> => {
   return await knex("transactions")
     .where({ user_id: userId })
     .orderBy("created_at", "desc");
@@ -20,9 +22,13 @@ export const getTransactionsByUserId = async (
 
 // Function to get a transaction by ID
 export const getTransactionById = async (
-  transactionId: number
-): Promise<Transaction | null> => {
-  return await knex("transactions").where({ id: transactionId }).first();
+  transactionId: number,
+  trx?: Knex.Transaction
+): Promise<TransactionType | null> => {
+  return await knex("transactions")
+    .transacting(trx)
+    .where({ id: transactionId })
+    .first();
 };
 
 // Function to get all transactions for a user with pagination
@@ -30,7 +36,7 @@ export const getPaginatedTransactionsByUserId = async (
   userId: number,
   limit: number,
   offset: number
-): Promise<Transaction[]> => {
+): Promise<Knex.Transaction[]> => {
   const transactions = await knex("transactions")
     .where({ user_id: userId })
     .limit(limit)
@@ -43,9 +49,11 @@ export const isDuplicateTransaction = async (
   userId: number,
   recipientId: number,
   money_out: number,
-  type: string
+  type: string,
+  trx?: Knex.Transaction
 ): Promise<boolean> => {
   const lastTransaction = await knex("transactions")
+    .transacting(trx)
     .where({ user_id: userId, recipient_id: recipientId, money_out, type })
     .orderBy("created_at", "desc")
     .first();

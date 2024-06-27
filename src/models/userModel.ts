@@ -1,5 +1,6 @@
 import knex from "../utils/db";
 import { User } from "../types";
+import { Knex } from "knex";
 
 // Function to create a new user
 export const createUser = async (user: Partial<User>): Promise<number> => {
@@ -8,13 +9,18 @@ export const createUser = async (user: Partial<User>): Promise<number> => {
 };
 
 // Function to get a user by ID
-export const getUserById = async (id: number): Promise<Partial<User>> => {
-  const user = await knex("users").where({ id }).first();
+export const getUserById = async (
+  id: number,
+  trx?: Knex.Transaction
+): Promise<Partial<User>> => {
+  const user = trx
+    ? await knex("users").transacting(trx).where({ id }).first()
+    : await knex("users").where({ id }).first(); // Get the user by ID
   if (user) {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
-  return null; // Return null if the user is not found
+  return null;
 };
 
 // Function to get a user by email
@@ -37,9 +43,10 @@ export const getUserByEmail = async (
 // Function to update a user's balance
 export const updateUserBalance = async (
   id: number,
-  newBalance: number
+  newBalance: number,
+  trx?: Knex.Transaction
 ): Promise<void> => {
-  await knex("users").where({ id }).update({
+  await knex("users").transacting(trx).where({ id }).update({
     balance: newBalance,
     updated_at: knex.fn.now(),
   });

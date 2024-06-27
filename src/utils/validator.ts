@@ -5,7 +5,7 @@ import {
   LoginRequestBody,
   TransactionRequestBody,
 } from "../types";
-import ApiError from "src/middlewares/errorHandler";
+import ApiError from "../middlewares/errorHandler";
 import logger from "../config/logger";
 
 export const validateRegister = (

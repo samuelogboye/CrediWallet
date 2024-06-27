@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "../config/config";
-import logger from "src/config/logger";
+import logger from "../config/logger";
 
 // Function to sign a JWT token
 export const signToken = (

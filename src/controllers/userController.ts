@@ -8,9 +8,9 @@ import {
 } from "../models/userModel";
 import ApiError from "../middlewares/errorHandler";
 import { AuthenticatedRequest } from "../types";
-import { allowedFields } from "src/models/userSchema";
-import { validateUpdateFields } from "src/utils/validator";
-import logger from "src/config/logger";
+import { allowedFields } from "../models/userSchema";
+import { validateUpdateFields } from "../utils/validator";
+import logger from "../config/logger";
 
 // Controller to get user details
 export const getUserDetailsController = async (

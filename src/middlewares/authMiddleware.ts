@@ -1,12 +1,11 @@
 import { Response, NextFunction } from "express";
 import axios from "axios";
-import jwt from "jsonwebtoken";
 import { getUserById } from "../models/userModel";
 import ApiError from "./errorHandler";
 import config from "../config/config";
-import { AuthenticatedRequest, SafeUser } from "src/types";
-import logger from "src/config/logger";
-import { decodeToken } from "src/utils/jwtUtils";
+import { AuthenticatedRequest, SafeUser } from "../types";
+import logger from "../config/logger";
+import { decodeToken } from "../utils/jwtUtils";
 
 export const checkBlacklist = async (
   req: AuthenticatedRequest,
@@ -83,7 +82,6 @@ export const authenticate = async (
     // Omit the password field
     const { password, ...safeUser } = user;
     req.user = safeUser as SafeUser;
-
     logger.info(`User with ID ${decoded.userId} authenticated successfully`);
     next();
   } catch (error) {

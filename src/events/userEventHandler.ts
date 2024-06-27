@@ -4,7 +4,6 @@ import EmailService from "../services/emailService";
 const emailService = new EmailService();
 
 userEventEmitter.on("userRegistered", async (user) => {
-  console.log("emit");
   const emailOptions = {
     subject: "Welcome to Our Service",
     recipientList: [user.email],

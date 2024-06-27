@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import ApiError from "../middlewares/errorHandler";
-import { AuthBody, AuthenticatedRequest, User } from "../types";
+import { AuthBody, AuthenticatedRequest } from "../types";
 import {
   createUser,
   generateAccountNumber,
   getUserByEmail,
-} from "src/models/userModel";
-import userEventEmitter from "src/events/userEvents";
-import logger from "src/config/logger";
-import { signToken } from "src/utils/jwtUtils";
+} from "../models/userModel";
+import userEventEmitter from "../events/userEvents";
+import logger from "../config/logger";
+import { signToken } from "../utils/jwtUtils";
 
 // Register a new user
 export const registerController = async (

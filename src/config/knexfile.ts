@@ -24,6 +24,20 @@ const knexConfig: { [key: string]: Knex.Config } = {
     },
   },
 
+  test: {
+    client: "sqlite3",
+    connection: {
+      filename: ":memory:",
+    },
+    useNullAsDefault: true,
+    migrations: {
+      directory: "../migrations",
+    },
+    seeds: {
+      directory: "../seeds",
+    },
+  },
+
   production: {
     client: "mysql2",
     connection: {

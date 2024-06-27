@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { getUserById, updateUser } from "../models/userModel";
 import ApiError from "../middlewares/errorHandler";
 import { AuthenticatedRequest } from "../types";
-import logger from "src/config/logger";
+import logger from "../config/logger";
 
 // Controller to block a user
 export const blockUserController = async (

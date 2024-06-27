@@ -1,6 +1,5 @@
-import express from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
-import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
@@ -10,7 +9,7 @@ import "./events/transferHandler";
 import "./events/userEventHandler";
 import { requestLogger } from "./middlewares/logger";
 
-const app = express();
+const app: Application = express();
 
 // Use the logger middleware
 app.use(requestLogger);
@@ -24,6 +23,9 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
+app.use("/", (req: Request, res: Response, next: NextFunction): void => {
+  res.json({ message: "Welcome to CrediWallet" });
+});
 // Global error handler
 app.use(errorHandler);
 

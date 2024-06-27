@@ -7,7 +7,7 @@ import {
 } from "../controllers/adminController";
 import { authenticate } from "../middlewares/authMiddleware";
 import { validateAdmin } from "../middlewares/validateAdmin";
-import { getAllUsersController } from "src/controllers/userController";
+import { getAllUsersController } from "../controllers/userController";
 
 const router = Router();
 

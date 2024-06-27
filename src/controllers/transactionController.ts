@@ -1,7 +1,6 @@
 import { Response, NextFunction } from "express";
 import {
   createTransaction,
-  getTransactionsByUserId,
   getPaginatedTransactionsByUserId,
   isDuplicateTransaction,
   getTransactionById,
@@ -14,9 +13,10 @@ import {
 } from "../models/userModel";
 import ApiError from "../middlewares/errorHandler";
 import { AuthenticatedRequest, TransactionRequestBody, User } from "../types";
-import { validateAmount } from "src/utils/validator";
-import transferEventEmitter from "src/events/transferEvents";
-import logger from "src/config/logger";
+import { validateAmount } from "../utils/validator";
+import transferEventEmitter from "../events/transferEvents";
+import logger from "../config/logger";
+import knex from "../utils/db";
 
 // Controller to fund an account
 export const fundAccountController = async (
@@ -29,40 +29,45 @@ export const fundAccountController = async (
   const { amount } = req.body as TransactionRequestBody;
   const userId = req.user.id;
 
+  const trx = await knex.transaction();
+
   try {
-    // Check if user exists
-    logger.info(`Checking if user with ID ${userId} exists`);
-    const user = await getUserById(userId);
+    const user = await getUserById(userId, trx);
     if (!user) {
-      logger.warn(`User with ID ${userId} not found`);
+      await trx.rollback();
       return next(new ApiError(404, "User not found"));
     }
 
-    // Validate amount
-    logger.info(`Validating amount: ${amount}`);
     await validateAmount(amount, userId, next);
+    if (res.headersSent) return;
 
-    // Fund account
-    logger.info(`Funding account for user with ID ${userId}`);
-    await updateUserBalance(userId, user.balance + amount);
+    const amount_to_update = Number(user.balance) + Number(amount);
 
-    // Create transaction record
-    logger.info(`Creating transaction record for user with ID ${userId}`);
-    const transactionId = await createTransaction({
-      user_id: userId,
-      type: "fund",
-      money_in: amount,
-      money_out: 0,
-      recipient_to_from: "self",
-      description: "Account funded",
-      balance: user.balance + amount,
+    await updateUserBalance(userId, amount_to_update, trx);
+
+    const transactionId = await createTransaction(
+      {
+        user_id: userId,
+        type: "fund",
+        money_in: amount,
+        money_out: 0,
+        recipient_to_from: "self",
+        description: "Account funded",
+        balance: amount_to_update,
+      },
+      trx
+    );
+
+    await trx.commit();
+
+    res.status(201).json({
+      message: "Account funded successfully",
+      transactionId,
+      currentBalance: amount_to_update,
+      user,
     });
-
-    logger.info(`Account funded successfully for user with ID ${userId}`);
-    res
-      .status(201)
-      .json({ message: "Account funded successfully", transactionId });
   } catch (error) {
+    await trx.rollback();
     const err = error as Error;
     logger.error(
       `Error funding account for user with ID ${userId}: ${err.message}`
@@ -92,28 +97,26 @@ export const transferController = async (
 
   const userId = req.user.id;
 
+  const trx = await knex.transaction();
+
   try {
-    // Check if user exists
-    logger.info(`Checking if user with ID ${userId} exists`);
-    const user = await getUserById(userId);
+    const user = await getUserById(userId, trx);
     if (!user) {
-      logger.warn(`User with ID ${userId} not found`);
+      await trx.rollback();
       return next(new ApiError(404, "User not found"));
     }
 
-    // Validate amount
-    logger.info(`Validating amount: ${amount}`);
     await validateAmount(amount, userId, next);
 
     let recipient: Partial<User>;
     let recipientIdentifier;
 
-    // Determine the recipient based on the provided fields
     if (recipient_id) {
       logger.info(`Checking if recipient with ID ${recipient_id} exists`);
-      recipient = await getUserById(recipient_id);
+      recipient = await getUserById(recipient_id, trx);
       recipientIdentifier = { recipient_id };
       if (recipient && recipient.id === user.id) {
+        await trx.rollback();
         logger.warn(`User with ID ${userId} tried to transfer to self`);
         return next(new ApiError(400, "Cannot create transaction with self"));
       }
@@ -124,42 +127,40 @@ export const transferController = async (
       recipient = await getUserByAccountNumber(recipient_account_number);
       recipientIdentifier = { recipient_account_number };
       if (recipient && recipient.account_number === user.account_number) {
+        await trx.rollback();
         logger.warn(`User with ID ${userId} tried to transfer to self`);
         return next(new ApiError(400, "Cannot create transaction with self"));
       }
     } else if (recipient_email) {
       logger.info(`Checking if recipient with email ${recipient_email} exists`);
-      recipient = await getUserByEmail(recipient_email, false);
+      (recipient = await getUserByEmail(recipient_email)), false;
       recipientIdentifier = { recipient_email };
       if (recipient && recipient.email === user.email) {
+        await trx.rollback();
         logger.warn(`User with ID ${userId} tried to transfer to self`);
         return next(new ApiError(400, "Cannot create transaction with self"));
       }
     }
 
     if (!recipient) {
-      logger.warn(`Recipient not found based on provided identifier`);
+      await trx.rollback();
       return next(new ApiError(404, "Recipient not found"));
     }
 
-    // Check for sufficient funds
-    logger.info(`Checking if user with ID ${userId} has sufficient funds`);
     if (user.balance < amount) {
-      logger.warn(`User with ID ${userId} has insufficient funds`);
+      await trx.rollback();
       return next(new ApiError(400, "Insufficient funds"));
     }
 
-    // Check for duplicate transactions within 30 seconds
-    logger.info(
-      `Checking for duplicate transactions for user with ID ${userId}`
-    );
     const isDuplicate = await isDuplicateTransaction(
       userId,
       recipient.id,
       amount,
-      type
+      type,
+      trx
     );
     if (isDuplicate) {
+      await trx.rollback();
       logger.warn(`Duplicate transaction detected for user with ID ${userId}`);
       return next(
         new ApiError(
@@ -169,46 +170,46 @@ export const transferController = async (
       );
     }
 
-    // Perform transfer
-    logger.info(`Performing transfer for user with ID ${userId}`);
     const senderBalance = user.balance - amount;
     const recipientBalance = Number(recipient.balance) + amount;
 
-    await updateUserBalance(userId, senderBalance);
-    await updateUserBalance(recipient.id, recipientBalance);
+    await updateUserBalance(userId, senderBalance, trx);
+    await updateUserBalance(recipient.id, recipientBalance, trx);
 
-    // Create transaction record for the sender
-    logger.info(`Creating transaction record for sender with ID ${userId}`);
-    const senderTransactionId = await createTransaction({
-      type: "transfer",
-      user_id: userId,
-      money_out: amount,
-      money_in: 0,
-      recipient_to_from: recipient.name + "/" + recipient.account_number,
-      description: description ? description : "Transfer to " + recipient.name,
-      balance: senderBalance,
-      recipient_id: recipient.id,
-    });
-
-    // Create transaction record for the recipient
-    logger.info(
-      `Creating transaction record for recipient with ID ${recipient.id}`
+    const senderTransactionId = await createTransaction(
+      {
+        type: "transfer",
+        user_id: userId,
+        money_out: amount,
+        money_in: 0,
+        recipient_to_from: recipient.name + "/" + recipient.account_number,
+        description: description
+          ? description
+          : "Transfer to " + recipient.name,
+        balance: senderBalance,
+        recipient_id: recipient.id,
+      },
+      trx
     );
-    const recipientTransactionId = await createTransaction({
-      type: "fund",
-      user_id: recipient.id,
-      money_out: 0,
-      money_in: amount,
-      recipient_to_from: user.name + "/" + user.account_number,
-      description: description ? description : "Fund from " + user.name,
-      balance: recipientBalance,
-      recipient_id: userId,
-    });
 
-    const transaction = await getTransactionById(senderTransactionId);
+    const recipientTransactionId = await createTransaction(
+      {
+        type: "fund",
+        user_id: recipient.id,
+        money_out: 0,
+        money_in: amount,
+        recipient_to_from: user.name + "/" + user.account_number,
+        description: description ? description : "Fund from " + user.name,
+        balance: recipientBalance,
+        recipient_id: userId,
+      },
+      trx
+    );
 
-    // Emit transfer event
-    logger.info(`Emitting transferMade event for user with ID ${userId}`);
+    await trx.commit();
+
+    const transaction = await getTransactionById(senderTransactionId, trx);
+
     transferEventEmitter.emit("transferMade", user, recipient, amount);
 
     logger.info(`Transfer successful for user with ID ${userId}`);
@@ -217,6 +218,7 @@ export const transferController = async (
       transaction,
     });
   } catch (error) {
+    await trx.rollback();
     const err = error as Error;
     logger.error(
       `Error processing transfer for user with ID ${userId}: ${err.message}`
@@ -238,11 +240,14 @@ export const withdrawController = async (
   const { amount } = req.body as TransactionRequestBody;
   const userId = req.user.id;
 
+  const trx = await knex.transaction();
+
   try {
     // Check if user exists
     logger.info(`Checking if user with ID ${userId} exists`);
     const user = await getUserById(userId);
     if (!user) {
+      await trx.rollback();
       logger.warn(`User with ID ${userId} not found`);
       return next(new ApiError(404, "User not found"));
     }
@@ -254,29 +259,43 @@ export const withdrawController = async (
     // Check for sufficient funds
     logger.info(`Checking if user with ID ${userId} has sufficient funds`);
     if (user.balance < amount) {
+      await trx.rollback();
       logger.warn(`User with ID ${userId} has insufficient funds`);
       return next(new ApiError(400, "Insufficient funds"));
     }
 
     // Withdraw funds
     logger.info(`Withdrawing funds for user with ID ${userId}`);
-    await updateUserBalance(userId, user.balance - amount);
+    const amount_to_update = Number(user.balance) - Number(amount);
+    await updateUserBalance(userId, amount_to_update, trx);
 
     // Create transaction record
     logger.info(`Creating transaction record for user with ID ${userId}`);
-    const transactionId = await createTransaction({
-      user_id: userId,
-      type: "withdraw",
-      money_out: amount,
-      money_in: 0,
-      recipient_to_from: "self",
-      description: "Withdrawal",
-      balance: user.balance - amount,
-    });
+    const transactionId = await createTransaction(
+      {
+        user_id: userId,
+        type: "withdraw",
+        money_out: amount,
+        money_in: 0,
+        recipient_to_from: "self",
+        description: "Withdrawal",
+        balance: amount_to_update,
+      },
+      trx
+    );
+    await trx.commit();
 
     logger.info(`Withdrawal successful for user with ID ${userId}`);
-    res.status(201).json({ message: "Withdrawal successful", transactionId });
+    res.status(201).json({
+      message: "Withdrawal successful",
+      transactionId,
+      amounWithdrawn: amount,
+      balanceBefore: user.balance,
+      finalBalance: amount_to_update,
+      userName: user.name,
+    });
   } catch (error) {
+    await trx.rollback();
     const err = error as Error;
     logger.error(
       `Error processing withdrawal for user with ID ${userId}: ${err.message}`
