@@ -63,14 +63,18 @@ export interface TransactionRequestBody {
 export interface VerifyEmailRequestBody {
   email: string;
 }
+
+export interface DbConfig {
+  host: string;
+  user: string;
+  password: string;
+  database: string;
+  port: number;
+}
+
 export interface Config {
-  db: {
-    host: string;
-    user: string;
-    password: string;
-    database: string;
-    port: number;
-  };
+  db: DbConfig;
+  prodDb: DbConfig;
   adjutor: {
     apiUrl: string;
     apiKey: string;
@@ -79,6 +83,7 @@ export interface Config {
   serverPort: number;
   secretKey: string;
   environment: string;
+  loglyToken: string;
 }
 
 // Define a type that omits the password field from User

@@ -12,6 +12,13 @@ const config: Config = {
     database: process.env.DB_NAME,
     port: Number(process.env.DB_PORT),
   },
+  prodDb: {
+    host: process.env.PROD_DB_HOST,
+    user: process.env.PROD_DB_USER,
+    password: process.env.PROD_DB_PASSWORD,
+    database: process.env.PROD_DB_NAME,
+    port: Number(process.env.PROD_DB_PORT),
+  },
   jwtSecretKey: process.env.SECRET_KEY,
   adjutor: {
     apiUrl: process.env.ADJUTOR_API_URL,
@@ -20,6 +27,7 @@ const config: Config = {
   serverPort: Number(process.env.PORT),
   secretKey: process.env.SECRET_KEY,
   environment: process.env.NODE_ENV,
+  loglyToken: process.env.LOGLY_TOKEN,
 };
 
 export default config;

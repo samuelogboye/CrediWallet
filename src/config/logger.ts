@@ -1,8 +1,8 @@
-import pino from "pino";
-import pinoPretty from "pino-pretty";
 import { join } from "path";
-import fs from "fs";
 import fsPromises from "fs/promises";
+import winston from "winston";
+import { Loggly } from "winston-loggly-bulk";
+import config from "../config/config";
 
 // Ensure logs directory and log file exist
 const logsDir = join(__dirname, "..", "..", "logs");
@@ -20,25 +20,39 @@ const ensureLogFileExists = async () => {
 // Call the function to ensure the log file exists
 ensureLogFileExists();
 
-const logStream = fs.createWriteStream(logFilePath, { flags: "a" });
-const prettyStream = pinoPretty({
-  colorize: true, // Colorize the output
-  translateTime: "yyyy-mm-dd HH:MM:ss.l", // Display timestamps in a human-readable format
-  ignore: "pid,hostname", // Ignore the pid and hostname fields
+// Create a Winston logger
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || "info",
+  format: winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    winston.format.printf(
+      ({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`
+    )
+  ),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.printf(
+          ({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`
+        )
+      ),
+    }),
+    new winston.transports.File({ filename: logFilePath }),
+  ],
 });
 
-const logger = pino(
-  {
-    level: process.env.LOG_LEVEL || "info",
-    base: {
-      pid: false,
-    },
-    timestamp: () => `,"time":"${new Date().toISOString()}"`,
-  },
-  pino.multistream([
-    { stream: prettyStream }, // Pretty print on console
-    { stream: logStream }, // Log into a file
-  ])
+// Add Loggly transport
+logger.add(
+  new Loggly({
+    token: config.loglyToken,
+    subdomain: "samogboye",
+    tags: ["Winston-NodeJS"],
+    json: true,
+  })
 );
 
 export default logger;
+
+// Example usage
+logger.info("Hello World from Node.js!");

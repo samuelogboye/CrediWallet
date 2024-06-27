@@ -41,11 +41,11 @@ const knexConfig: { [key: string]: Knex.Config } = {
   production: {
     client: "mysql2",
     connection: {
-      host: config.db.host,
-      user: config.db.user,
-      password: config.db.password,
-      database: config.db.database,
-      port: config.db.port,
+      host: config.prodDb.host,
+      user: config.prodDb.user,
+      password: config.prodDb.password,
+      database: config.prodDb.database,
+      port: config.prodDb.port,
     },
     pool: {
       min: 2,
