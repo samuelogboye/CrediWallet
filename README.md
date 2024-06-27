@@ -88,6 +88,7 @@ http://localhost:3000/api/docs
 ## E-R Diagram
 
 The Entity-Relationship diagram provides a visual representation of the database schema and relationships.
+![E-R Diagram](./CrediWalletE-RD.png)
 
 ### Entities and Relationships
 
