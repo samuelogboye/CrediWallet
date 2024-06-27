@@ -15,16 +15,24 @@ export const blockUserController = async (
   const { userId } = req.params;
 
   try {
+    // Validate if userId is a number
+    const numericUserId = Number(userId);
+    if (isNaN(numericUserId)) {
+      logger.warn(`Invalid userId provided: ${userId}`);
+      return next(new ApiError(404, "Invalid user ID"));
+    }
+
     // Check if the user exists
-    const user = await getUserById(Number(userId));
+    const user = await getUserById(numericUserId);
     if (!user) {
-      logger.warn(`User with ID ${userId} not found`);
+      logger.warn(`User with ID ${numericUserId} not found`);
       return next(new ApiError(404, "User not found"));
     }
 
     // Block the user
     await updateUser(Number(userId), { is_blocked: true });
-    logger.info(`User with ID ${userId} blocked successfully`);
+    await updateUser(numericUserId, { is_blocked: true });
+    logger.info(`User with ID ${numericUserId} blocked successfully`);
 
     res.status(200).json({ message: "User blocked successfully" });
   } catch (error) {
@@ -47,16 +55,24 @@ export const unblockUserController = async (
   const { userId } = req.params;
 
   try {
+    // Validate if userId is a number
+    const numericUserId = Number(userId);
+    if (isNaN(numericUserId)) {
+      logger.warn(`Invalid userId provided: ${userId}`);
+      return next(new ApiError(404, "Invalid user ID"));
+    }
+
     // Check if the user exists
-    const user = await getUserById(Number(userId));
+    const user = await getUserById(numericUserId);
     if (!user) {
-      logger.warn(`User with ID ${userId} not found`);
+      logger.warn(`User with ID ${numericUserId} not found`);
       return next(new ApiError(404, "User not found"));
     }
 
     // Unblock the user
     await updateUser(Number(userId), { is_blocked: false });
-    logger.info(`User with ID ${userId} unblocked successfully`);
+    await updateUser(numericUserId, { is_blocked: false });
+    logger.info(`User with ID ${numericUserId} unblocked successfully`);
 
     res.status(200).json({ message: "User unblocked successfully" });
   } catch (error) {

@@ -5,15 +5,15 @@ import { Request } from "express";
 export interface User {
   id: number;
   name: string;
-  email: string;
-  password: string;
-  account_number: string;
-  balance: number;
-  is_admin: boolean;
-  is_blocked: boolean;
-  is_email_confirmed: boolean;
-  created_at: Date;
-  updated_at: Date;
+  email?: string;
+  password?: string;
+  account_number?: string;
+  balance?: number;
+  is_admin?: boolean;
+  is_blocked?: boolean;
+  is_email_confirmed?: boolean;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 // The Transaction type
