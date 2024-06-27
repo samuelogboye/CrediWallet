@@ -9,7 +9,7 @@
     "start": "npm run migrate && nodemon dist/server.js",
     "starts": "npx nodemon --exec npx ts-node -r tsconfig-paths/register src/server.ts",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
-    "build": "tsc",
+    "build": "NODE_ENV=development tsc",
     "test:watch": "jest --watch"
   },
   "repository": {
