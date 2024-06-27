@@ -18,3 +18,5 @@ Run Migrations
 
 Run the migrations to create the tables:
 npx knex migrate:latest --knexfile src/config/knexfile.ts --env development
+
+api swagger documantation http://localhost:3000/api/docs/

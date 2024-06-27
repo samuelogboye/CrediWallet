@@ -1,0 +1,537 @@
+openapi: 3.0.0
+info:
+  title: CrediWallet API
+  version: 1.0.0
+  description: API Documentation for CrediWallet
+servers:
+  - url: "http://localhost:3000"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TransactionRequestBody:
+      type: object
+      required:
+        - type
+        - amount
+      properties:
+        type:
+          type: string
+          enum:
+            - fund
+            - withdraw
+            - transfer
+          description: Type of transaction
+        amount:
+          type: number
+          description: Amount for the transaction
+        recipient_id:
+          type: string
+          description: ID of the recipient (required for transfer)
+        recipient_account_number:
+          type: string
+          description: Account number of the recipient (required for transfer)
+        recipient_email:
+          type: string
+          description: Email of the recipient (required for transfer)
+        description:
+          type: string
+          description: Description of the transaction
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        account_number:
+          type: string
+        balance:
+          type: number
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        type:
+          type: string
+        money_in:
+          type: number
+        money_out:
+          type: number
+        recipient_to_from:
+          type: string
+        description:
+          type: string
+        balance:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+paths:
+  /api/v1/admin/get-users:
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get all users
+      tags:
+        - Admin
+      responses:
+        "200":
+          description: List of users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Error fetching users
+  "/api/v1/admin/block/{userId}":
+    put:
+      security:
+        - BearerAuth: []
+      summary: Block a user
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: User ID
+      responses:
+        "200":
+          description: User blocked successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: User not found
+        "500":
+          description: Error blocking user
+  "/api/v1/admin/unblock/{userId}":
+    put:
+      security:
+        - BearerAuth: []
+      summary: Unblock a user
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: User ID
+      responses:
+        "200":
+          description: User unblocked successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: User not found
+        "500":
+          description: Error unblocking user
+  "/api/v1/admin/make-admin/{userId}":
+    put:
+      security:
+        - BearerAuth: []
+      summary: Make a user an admin
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: User ID
+      responses:
+        "200":
+          description: User made admin successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: User not found
+        "500":
+          description: Error making user admin
+  "/api/v1/admin/remove-admin/{userId}":
+    put:
+      security:
+        - BearerAuth: []
+      summary: Remove admin role from a user
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: User ID
+      responses:
+        "200":
+          description: Admin role removed from user successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: User not found
+        "500":
+          description: Error removing admin role from user
+  /api/v1/auth/register:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+        "500":
+          description: Error registering user
+  /api/v1/auth/login:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Log in an existing user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "500":
+          description: Error logging in user
+  /api/v1/transactions/fund:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Fund an account
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequestBody"
+      responses:
+        "201":
+          description: Account funded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  transactionId:
+                    type: number
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+        "500":
+          description: Error funding account
+  /api/v1/transactions/transfer:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Transfer funds
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequestBody"
+      responses:
+        "201":
+          description: Transfer successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  transaction:
+                    $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Invalid input or insufficient funds
+        "401":
+          description: Unauthorized
+        "404":
+          description: User or recipient not found
+        "500":
+          description: Error processing transfer
+  /api/v1/transactions/withdraw:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Withdraw funds
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequestBody"
+      responses:
+        "201":
+          description: Withdrawal successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  transactionId:
+                    type: number
+        "400":
+          description: Invalid input or insufficient funds
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+        "500":
+          description: Error processing withdrawal
+  /api/v1/transactions:
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get transaction history
+      tags:
+        - Transactions
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items per page
+      responses:
+        "200":
+          description: Transaction history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userData:
+                    $ref: "#/components/schemas/User"
+                  transactionCount:
+                    type: integer
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Transaction"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Error fetching transaction history
+  "/api/v1/transactions/{id}":
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get transaction by ID
+      tags:
+        - Transactions
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Transaction ID
+      responses:
+        "200":
+          description: Transaction retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userData:
+                    $ref: "#/components/schemas/User"
+                  transaction:
+                    $ref: "#/components/schemas/Transaction"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Transaction not found
+        "500":
+          description: Error fetching transaction
+  /api/v1/users/me:
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get user details
+      tags:
+        - Users
+      responses:
+        "200":
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Error fetching user details
+    put:
+      security:
+        - BearerAuth: []
+      summary: Update user details
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                account_number:
+                  type: string
+                balance:
+                  type: number
+      responses:
+        "200":
+          description: User details updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "500":
+          description: Error updating user details
+    delete:
+      security:
+        - BearerAuth: []
+      summary: Delete user account
+      tags:
+        - Users
+      responses:
+        "204":
+          description: User account deleted successfully
+        "401":
+          description: Unauthorized
+        "500":
+          description: Error deleting user account
+  "/api/v1/users/account/{accountNumber}":
+    get:
+      security:
+        - BearerAuth: []
+      summary: Get user by account number
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: accountNumber
+          schema:
+            type: string
+          required: true
+          description: User account number
+      responses:
+        "200":
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+        "500":
+          description: Error fetching user details

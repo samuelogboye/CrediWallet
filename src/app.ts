@@ -8,11 +8,14 @@ import adminRoutes from "./routes/adminRoutes";
 import "./events/transferHandler";
 import "./events/userEventHandler";
 import { requestLogger } from "./middlewares/logger";
+import setupSwagger from "./middlewares/swagger";
 
 const app: Application = express();
 
 // Use the logger middleware
 app.use(requestLogger);
+
+setupSwagger(app);
 
 // Cross Origin Resource Sharing
 // app.use(cors(corsOptions));
