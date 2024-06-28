@@ -287,7 +287,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TransactionRequestBody"
+              type: object
+              properties:
+                amount:
+                  type: number
+              required:
+                - amount
       responses:
         "201":
           description: Account funded successfully

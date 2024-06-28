@@ -64,7 +64,7 @@ export const fundAccountController = async (
       message: "Account funded successfully",
       transactionId,
       currentBalance: amount_to_update,
-      user,
+      userName: user.name,
     });
   } catch (error) {
     await trx.rollback();
