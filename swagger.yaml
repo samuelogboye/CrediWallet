@@ -4,7 +4,12 @@ info:
   version: 1.0.0
   description: API Documentation for CrediWallet
 servers:
-  - url: "http://localhost:3000"
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://samuel-ogboye-lendsqr-be-te-yijcc.kinsta.app
+    description: Staging server
+  - url: https://samuel-ogboye-lendsqr-be-te-yijcc.kinsta.app
+    description: Production server
 components:
   securitySchemes:
     BearerAuth:
