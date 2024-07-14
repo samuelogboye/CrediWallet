@@ -5,11 +5,11 @@ const emailService = new EmailService();
 
 transferEventEmitter.on("transferMade", async (sender, recipient, amount) => {
   const senderEmailOptions = {
-    subject: "Transfer Notification",
+    subject: "CrediWallet Transfer Notification",
     recipientList: [sender.email],
-    message: `You have successfully transferred ${amount} to ${
+    message: `You money transfer of ₦ ${amount} to ${
       recipient.name || recipient.email || recipient.account_number
-    }.`,
+    } has been completed.`,
     context: {
       name: sender.name,
       amount,
@@ -19,7 +19,7 @@ transferEventEmitter.on("transferMade", async (sender, recipient, amount) => {
   };
 
   const recipientEmailOptions = {
-    subject: "Transfer Notification",
+    subject: "CrediWallet Transfer Notification",
     recipientList: [recipient.email],
     message: `You have received ${amount} from ${
       sender.name || sender.email || sender.account_number
