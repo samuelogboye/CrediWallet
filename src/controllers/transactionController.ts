@@ -100,8 +100,10 @@ export const transferController = async (
   const trx = await knex.transaction();
 
   try {
+    logger.info(`[trasanctionCOntroller]: Fetching user by ID: ${userId}`);
     const user = await getUserById(userId, trx);
     if (!user) {
+      logger.warn(`User with ID ${userId} not found`);
       await trx.rollback();
       return next(new ApiError(404, "User not found"));
     }
@@ -133,21 +135,25 @@ export const transferController = async (
       }
     } else if (recipient_email) {
       logger.info(`Checking if recipient with email ${recipient_email} exists`);
-      (recipient = await getUserByEmail(recipient_email)), false;
+      recipient = await getUserByEmail(recipient_email);
       recipientIdentifier = { recipient_email };
       if (recipient && recipient.email === user.email) {
         await trx.rollback();
         logger.warn(`User with ID ${userId} tried to transfer to self`);
         return next(new ApiError(400, "Cannot create transaction with self"));
       }
+    } else {
+      return next(new ApiError(404, "Receipient search parameter not valid"));
     }
 
     if (!recipient) {
+      logger.warn("Recipient not found");
       await trx.rollback();
       return next(new ApiError(404, "Recipient not found"));
     }
 
     if (user.balance < amount) {
+      logger.warn(`Insufficient funds for user with ID ${userId}`);
       await trx.rollback();
       return next(new ApiError(400, "Insufficient funds"));
     }
@@ -173,7 +179,11 @@ export const transferController = async (
     const senderBalance = user.balance - amount;
     const recipientBalance = Number(recipient.balance) + amount;
 
+    logger.info(`Updating balance for user ID ${userId}: ${senderBalance}`);
     await updateUserBalance(userId, senderBalance, trx);
+    logger.info(
+      `Updating balance for recipient ID ${recipient.id}: ${recipientBalance}`
+    );
     await updateUserBalance(recipient.id, recipientBalance, trx);
 
     const senderTransactionId = await createTransaction(
@@ -208,7 +218,7 @@ export const transferController = async (
 
     await trx.commit();
 
-    const transaction = await getTransactionById(senderTransactionId, trx);
+    const transaction = await getTransactionById(senderTransactionId);
 
     transferEventEmitter.emit("transferMade", user, recipient, amount);
 
@@ -218,7 +228,9 @@ export const transferController = async (
       transaction,
     });
   } catch (error) {
-    await trx.rollback();
+    if (!trx.isCompleted()) {
+      await trx.rollback();
+    }
     const err = error as Error;
     logger.error(
       `Error processing transfer for user with ID ${userId}: ${err.message}`
