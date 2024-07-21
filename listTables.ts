@@ -1,6 +1,5 @@
 import knex from "knex";
 import knexConfig from "./src/config/knexfile";
-import config from "./src/config/config";
 
 const environment = "development"; //config.environment;
 const db = knex(knexConfig[environment]);
