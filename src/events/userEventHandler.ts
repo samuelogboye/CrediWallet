@@ -28,6 +28,5 @@ userEventEmitter.on("userLoggedIn", async (loginDetails) => {
     },
     template: "loginNotification.ejs",
   };
-
   await emailService.sendEmail(emailOptions);
 });

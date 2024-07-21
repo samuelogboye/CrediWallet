@@ -64,9 +64,11 @@ export const updateUserDetailsController = async (
     // Validate the fields
     logger.info(`Validating update fields for user with ID ${userId}`);
     const fields = Object.keys(updatedFields);
+    console.log("fields", fields)
     const isValidOperation = fields.every((field) =>
       allowedFields.includes(field)
     );
+    console.log("isValidOperation", isValidOperation)
 
     if (!isValidOperation) {
       const invalidFields = fields
@@ -81,7 +83,7 @@ export const updateUserDetailsController = async (
     }
 
     // Restricted fields that cannot be updated
-    const restrictedFields = ["account_number", "email"];
+    const restrictedFields = ["account_number", "email", "balance"];
 
     // Check for restricted fields
     validateUpdateFields(fields, restrictedFields, next);
@@ -165,6 +167,14 @@ export const getUserByAccountNumberController = async (
   );
 
   const { accountNumber } = req.params;
+
+  logger.info(`Validating account number format: ${accountNumber}`);
+  // Check if account number is a 10-digit number
+  const regex = /^[0-9]{10}$/;
+  if (!regex.test(accountNumber)) {
+    logger.warn("Invalid account number format");
+    return next(new ApiError(400, "Invalid account number format"));
+  }
   try {
     logger.info(`Fetching user with account number ${accountNumber}`);
     const user = await getUserByAccountNumber(accountNumber);
