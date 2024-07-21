@@ -48,16 +48,23 @@ export const validateTransaction = (
   res: Response,
   next: NextFunction
 ) => {
+  logger.info("[validator.validateTransaction]: Function entry")
   const schema = Joi.object<TransactionRequestBody>({
     type: Joi.string().valid("fund", "transfer", "withdraw").required(),
     amount: Joi.number().positive().required(),
     recipient_id: Joi.number().optional(),
+    recipient_account_number: Joi.string().optional(),
+    recipient_email: Joi.string().email().optional(),
+    description: Joi.string().optional(),
   });
 
   const { error } = schema.validate(req.body);
   if (error) {
+  logger.error(`[validator.validateTransaction]: An error occured, ${error}`)
     return res.status(400).json({ error: error.details[0].message });
   }
+  logger.info("[validator.validateTransaction]: Function exit")
+
   next();
 };
 
