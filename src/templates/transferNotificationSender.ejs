@@ -4,15 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transfer Notification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .signature {
+            font-style: italic;
+            color: #777;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 100px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Transfer Notification</h1>
-    <p>Dear <%= name %>,</p>
-    <p>You have successfully transferred <strong>₦<%= amount %></strong> to <strong><%= recipient %></strong>.</p>
-    <p>Please log into your CrediWallet app to check your account balance.</p>
-    <p>If you did not initiate this transfer, please contact our support team immediately.</p>
-    <p>Thank you for using our service.</p>
-    <p>Best regards,</p>
-    <p>CrediWallet</p>
+    <div class="email-container">
+        <div class="logo">
+            <img src="https://res.cloudinary.com/dbn9ejpno/image/upload/v1719434850/crediwallet_pat8jm.png" alt="CrediWallet Logo">
+        </div>
+        <h1>Transfer Notification</h1>
+        <p>Dear <%= name %>,</p>
+        <p>You have successfully transferred <strong>₦<%= amount %></strong> to <strong><%= recipient %></strong>.</p>
+        <p>Please log into your CrediWallet app to check your account balance.</p>
+        <p>If you did not initiate this transfer, please contact our support team immediately.</p>
+        <p>Thank you for using our service.</p>
+        <p class="signature">Best regards,<br>CrediWallet</p>
+    </div> 
 </body>
 </html>

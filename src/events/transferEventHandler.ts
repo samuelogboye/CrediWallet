@@ -35,3 +35,17 @@ transferEventEmitter.on("transferMade", async (sender, recipient, amount) => {
   await emailService.sendEmail(senderEmailOptions);
   await emailService.sendEmail(recipientEmailOptions);
 });
+
+transferEventEmitter.on("fund", async (user, amount) => {
+  const fundingEmailOptions = {
+    subject: "CrediWallet Funding Notification",
+    recipientList: [user.email],
+    context: {
+      name: user.name,
+      amount,
+    },
+    template: "fundingNotification.ejs",
+  };
+
+  await emailService.sendEmail(fundingEmailOptions);
+});
