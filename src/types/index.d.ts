@@ -109,3 +109,13 @@ export interface EmailOptions {
   context?: Record<string, any>;
   template?: string;
 }
+
+export interface MetricsType {
+  initialBalance: number;
+  finalBalance: number;
+  totalDebit: number;
+  totalCredit: number;
+  from: string;
+  to: string;
+  currentDate: string;
+}

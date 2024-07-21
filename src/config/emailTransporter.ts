@@ -1,5 +1,4 @@
-import nodemailer, { Transporter } from "nodemailer";
-import { SentMessageInfo } from "nodemailer";
+import nodemailer, { Transporter, SentMessageInfo } from "nodemailer";
 
 // Ensure the necessary environment variables are set up
 import dotenv from "dotenv";

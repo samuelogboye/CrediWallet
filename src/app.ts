@@ -5,8 +5,9 @@ import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import adminRoutes from "./routes/adminRoutes";
-import "./events/transferHandler";
+import "./events/transferEventHandler";
 import "./events/userEventHandler";
+import "./events/statementEventHandler";
 import { requestLogger } from "./middlewares/logger";
 import setupSwagger from "./middlewares/swagger";
 
