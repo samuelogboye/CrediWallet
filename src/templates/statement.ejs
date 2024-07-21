@@ -1,0 +1,309 @@
+{% comment %} <!-- templates/statement.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .details {
+      margin-bottom: 20px;
+    }
+    .transactions {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .transactions th, .transactions td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .transactions th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    Account Statement
+  </div>
+  <div class="details">
+    <p>Name: <%= user.name %></p>
+    <p>Wallet Number: <%= user.account_number %></p>
+    <p>Period: from <%= metrics.from %> to <%= metrics.to %></p>
+    <p>Total Debits: <%= metrics.totalDebit %></p>
+    <p>Total Credits: <%= metrics.totalCredit %></p>
+    <p>Print Date: <%= metrics.currentDate %></p>
+  </div>
+  <table class="transactions">
+    <thead>
+      <tr>
+        <th>Trans. Date</th>
+        <th>Trans. Type</th>
+        <th>Debit (NGN)</th>
+        <th>Credit (NGN)</th>
+        <th>Balance (NGN)</th>
+        <th>Counter Party</th>
+        <th>Trans. ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% transactions.forEach(transaction => { %>
+        <tr>
+          <td><%= transaction.created_at %></td>
+          <td><%= transaction.type %></td>
+          <td><%= transaction.money_out || '' %></td>
+          <td><%= transaction.money_in || '' %></td>
+          <td><%= transaction.balance %></td>
+          <td><%= transaction.recipient_to_from %></td>
+          <td><%= transaction.id %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+</head>
+
+<body style="margin: 0;">
+
+<div id="p1" style="overflow: hidden; position: relative; background-color: white; width: 909px; height: 1286px;">
+
+<!-- Begin shared CSS values -->
+<style class="shared-css" type="text/css" >
+.t {
+	transform-origin: bottom left;
+	z-index: 2;
+	position: absolute;
+	white-space: pre;
+	overflow: visible;
+	line-height: 1.5;
+}
+.text-container {
+	white-space: pre;
+}
+@supports (-webkit-touch-callout: none) {
+	.text-container {
+		white-space: normal;
+	}
+}
+</style>
+<!-- End shared CSS values -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_1{left:40px;bottom:1048px;letter-spacing:0.22px;}
+#t2_1{left:548px;bottom:1086px;letter-spacing:0.15px;}
+#t3_1{left:754px;bottom:1092px;letter-spacing:0.14px;}
+#t4_1{left:822px;bottom:1080px;letter-spacing:0.14px;}
+#t5_1{left:548px;bottom:1054px;letter-spacing:0.12px;}
+#t6_1{left:787px;bottom:1054px;letter-spacing:0.12px;}
+#t7_1{left:548px;bottom:1028px;letter-spacing:0.12px;}
+#t8_1{left:794px;bottom:1028px;letter-spacing:0.11px;}
+#t9_1{left:40px;bottom:1002px;letter-spacing:0.11px;}
+#ta_1{left:212px;bottom:1002px;letter-spacing:0.12px;}
+#tb_1{left:548px;bottom:1002px;letter-spacing:0.11px;}
+#tc_1{left:729px;bottom:1002px;letter-spacing:0.11px;}
+#td_1{left:40px;bottom:980px;letter-spacing:0.11px;}
+#te_1{left:212px;bottom:980px;letter-spacing:0.12px;}
+#tf_1{left:548px;bottom:980px;letter-spacing:0.1px;}
+#tg_1{left:731px;bottom:980px;letter-spacing:0.11px;}
+#th_1{left:40px;bottom:931px;letter-spacing:0.11px;}
+#ti_1{left:212px;bottom:931px;letter-spacing:0.1px;}
+#tj_1{left:385px;bottom:931px;letter-spacing:0.11px;}
+#tk_1{left:567px;bottom:931px;letter-spacing:0.12px;}
+#tl_1{left:727px;bottom:931px;letter-spacing:0.1px;}
+#tm_1{left:40px;bottom:893px;letter-spacing:0.11px;}
+#tn_1{left:212px;bottom:899px;letter-spacing:0.12px;}
+#to_1{left:212px;bottom:887px;letter-spacing:0.13px;}
+#tp_1{left:567px;bottom:893px;letter-spacing:0.11px;}
+#tq_1{left:727px;bottom:893px;letter-spacing:0.12px;}
+#tr_1{left:40px;bottom:855px;letter-spacing:0.11px;}
+#ts_1{left:212px;bottom:861px;letter-spacing:0.11px;}
+#tt_1{left:212px;bottom:849px;letter-spacing:0.12px;}
+#tu_1{left:385px;bottom:855px;letter-spacing:0.12px;}
+#tv_1{left:727px;bottom:855px;letter-spacing:0.13px;}
+#tw_1{left:40px;bottom:817px;letter-spacing:0.11px;}
+#tx_1{left:212px;bottom:817px;letter-spacing:0.11px;}
+#ty_1{left:567px;bottom:817px;letter-spacing:0.11px;}
+#tz_1{left:727px;bottom:817px;letter-spacing:0.12px;}
+#t10_1{left:40px;bottom:779px;letter-spacing:0.11px;}
+#t11_1{left:212px;bottom:785px;letter-spacing:0.13px;}
+#t12_1{left:212px;bottom:773px;letter-spacing:0.14px;}
+#t13_1{left:567px;bottom:779px;letter-spacing:0.11px;}
+#t14_1{left:727px;bottom:779px;letter-spacing:0.12px;}
+#t15_1{left:40px;bottom:740px;letter-spacing:0.11px;}
+#t16_1{left:212px;bottom:747px;letter-spacing:0.12px;}
+#t17_1{left:212px;bottom:734px;letter-spacing:0.13px;}
+#t18_1{left:385px;bottom:740px;letter-spacing:0.12px;}
+#t19_1{left:727px;bottom:740px;letter-spacing:0.12px;}
+#t1a_1{left:40px;bottom:702px;letter-spacing:0.11px;}
+#t1b_1{left:212px;bottom:708px;letter-spacing:0.12px;}
+#t1c_1{left:212px;bottom:696px;letter-spacing:0.13px;}
+#t1d_1{left:567px;bottom:702px;letter-spacing:0.11px;}
+#t1e_1{left:727px;bottom:702px;letter-spacing:0.12px;}
+#t1f_1{left:40px;bottom:664px;letter-spacing:0.11px;}
+#t1g_1{left:212px;bottom:670px;letter-spacing:0.13px;}
+#t1h_1{left:212px;bottom:658px;letter-spacing:0.13px;}
+#t1i_1{left:567px;bottom:664px;letter-spacing:0.11px;}
+#t1j_1{left:727px;bottom:664px;letter-spacing:0.12px;}
+#t1k_1{left:40px;bottom:626px;letter-spacing:0.11px;}
+#t1l_1{left:212px;bottom:632px;letter-spacing:0.12px;}
+#t1m_1{left:212px;bottom:620px;letter-spacing:0.13px;}
+#t1n_1{left:567px;bottom:626px;letter-spacing:0.11px;}
+#t1o_1{left:727px;bottom:626px;letter-spacing:0.12px;}
+#t1p_1{left:40px;bottom:588px;letter-spacing:0.11px;}
+#t1q_1{left:212px;bottom:594px;letter-spacing:0.13px;}
+#t1r_1{left:212px;bottom:582px;letter-spacing:0.14px;}
+#t1s_1{left:567px;bottom:588px;letter-spacing:0.11px;}
+#t1t_1{left:727px;bottom:588px;letter-spacing:0.12px;}
+#t1u_1{left:40px;bottom:549px;letter-spacing:0.11px;}
+#t1v_1{left:212px;bottom:556px;letter-spacing:0.12px;}
+#t1w_1{left:212px;bottom:543px;letter-spacing:0.14px;}
+#t1x_1{left:385px;bottom:549px;letter-spacing:0.12px;}
+#t1y_1{left:727px;bottom:549px;letter-spacing:0.12px;}
+#t1z_1{left:40px;bottom:511px;letter-spacing:0.11px;}
+#t20_1{left:212px;bottom:517px;letter-spacing:0.12px;}
+#t21_1{left:212px;bottom:505px;letter-spacing:0.14px;}
+#t22_1{left:385px;bottom:511px;letter-spacing:0.12px;}
+#t23_1{left:727px;bottom:511px;letter-spacing:0.13px;}
+#t24_1{left:40px;bottom:473px;letter-spacing:0.11px;}
+#t25_1{left:212px;bottom:473px;letter-spacing:0.1px;}
+#t26_1{left:567px;bottom:473px;letter-spacing:0.11px;}
+#t27_1{left:727px;bottom:473px;letter-spacing:0.13px;}
+#t28_1{left:40px;bottom:435px;letter-spacing:0.11px;}
+#t29_1{left:212px;bottom:441px;letter-spacing:0.12px;}
+#t2a_1{left:212px;bottom:429px;letter-spacing:0.14px;}
+#t2b_1{left:567px;bottom:435px;letter-spacing:0.11px;}
+#t2c_1{left:727px;bottom:435px;letter-spacing:0.12px;}
+#t2d_1{left:40px;bottom:397px;letter-spacing:0.11px;}
+#t2e_1{left:212px;bottom:403px;letter-spacing:0.12px;}
+#t2f_1{left:212px;bottom:391px;letter-spacing:0.14px;}
+#t2g_1{left:567px;bottom:397px;letter-spacing:0.11px;}
+#t2h_1{left:727px;bottom:397px;letter-spacing:0.12px;}
+#t2i_1{left:40px;bottom:358px;letter-spacing:0.11px;}
+#t2j_1{left:212px;bottom:365px;letter-spacing:0.12px;}
+#t2k_1{left:212px;bottom:352px;letter-spacing:0.14px;}
+#t2l_1{left:385px;bottom:358px;letter-spacing:0.12px;}
+#t2m_1{left:727px;bottom:358px;letter-spacing:0.12px;}
+#t2n_1{left:40px;bottom:320px;letter-spacing:0.11px;}
+#t2o_1{left:212px;bottom:320px;letter-spacing:0.11px;}
+#t2p_1{left:567px;bottom:320px;letter-spacing:0.11px;}
+#t2q_1{left:727px;bottom:320px;letter-spacing:0.12px;}
+#t2r_1{left:40px;bottom:282px;letter-spacing:0.11px;}
+#t2s_1{left:212px;bottom:282px;letter-spacing:0.1px;}
+#t2t_1{left:304px;bottom:282px;letter-spacing:0.13px;}
+#t2u_1{left:567px;bottom:282px;letter-spacing:0.11px;}
+#t2v_1{left:727px;bottom:282px;letter-spacing:0.12px;}
+#t2w_1{left:40px;bottom:244px;letter-spacing:0.11px;}
+#t2x_1{left:212px;bottom:250px;letter-spacing:0.12px;}
+#t2y_1{left:212px;bottom:238px;letter-spacing:0.14px;}
+#t2z_1{left:385px;bottom:244px;letter-spacing:0.12px;}
+#t30_1{left:727px;bottom:244px;letter-spacing:0.12px;}
+#t31_1{left:40px;bottom:206px;letter-spacing:0.11px;}
+#t32_1{left:212px;bottom:212px;letter-spacing:0.12px;}
+#t33_1{left:212px;bottom:200px;letter-spacing:0.14px;}
+#t34_1{left:385px;bottom:206px;letter-spacing:0.12px;}
+#t35_1{left:727px;bottom:206px;letter-spacing:0.12px;}
+#t36_1{left:40px;bottom:168px;letter-spacing:0.11px;}
+#t37_1{left:212px;bottom:168px;letter-spacing:0.11px;}
+#t38_1{left:302px;bottom:168px;letter-spacing:0.16px;}
+#t39_1{left:567px;bottom:168px;letter-spacing:0.11px;}
+#t3a_1{left:727px;bottom:168px;letter-spacing:0.13px;}
+#t3b_1{left:40px;bottom:129px;letter-spacing:0.11px;}
+#t3c_1{left:212px;bottom:135px;letter-spacing:0.12px;}
+#t3d_1{left:212px;bottom:123px;letter-spacing:0.14px;}
+#t3e_1{left:567px;bottom:129px;letter-spacing:0.11px;}
+#t3f_1{left:727px;bottom:129px;letter-spacing:0.12px;}
+#t3g_1{left:40px;bottom:91px;letter-spacing:0.11px;}
+#t3h_1{left:212px;bottom:91px;letter-spacing:0.11px;}
+#t3i_1{left:567px;bottom:91px;letter-spacing:0.11px;}
+#t3j_1{left:727px;bottom:91px;letter-spacing:0.12px;}
+#t3k_1{left:40px;bottom:53px;letter-spacing:0.11px;}
+#t3l_1{left:212px;bottom:59px;letter-spacing:0.12px;}
+#t3m_1{left:212px;bottom:47px;letter-spacing:0.13px;}
+#t3n_1{left:567px;bottom:53px;letter-spacing:0.11px;}
+#t3o_1{left:727px;bottom:53px;letter-spacing:0.13px;}
+#t3p_1{left:40px;bottom:15px;letter-spacing:0.11px;}
+#t3q_1{left:212px;bottom:15px;letter-spacing:0.12px;}
+#t3r_1{left:567px;bottom:15px;letter-spacing:0.11px;}
+#t3s_1{left:727px;bottom:15px;letter-spacing:0.13px;}
+#t3t_1{left:902px;bottom:-6px;}
+
+.s0_1{font-size:24px;font-family:Helvetica, Arial, sans-serif;color:#6306B2;}
+.s1_1{font-size:12px;font-family:Roboto-Medium_u;color:#6F7B85;}
+.s2_1{font-size:12px;font-family:Roboto-Medium_u;color:#202046;}
+.s3_1{font-size:12px;font-family:Helvetica, Arial, sans-serif;color:#6306B2;}
+.s4_1{font-size:12px;font-family:Roboto-Medium_u;color:#6306B2;}
+.s5_1{font-size:12px;font-family:Helvetica, Arial, sans-serif;color:#202046;}
+.s6_1{font-size:15px;font-family:Roboto-Medium_u;color:#000;}
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style id="fonts1" type="text/css" >
+
+@font-face {
+	font-family: Roboto-Medium_u;
+	src: url("fonts/Roboto-Medium_u.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin page background -->
+<div id="pg1Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg1" style="-webkit-user-select: none;"><object width="909" height="1286" data="1/1.svg" type="image/svg+xml" id="pdf1" style="width:909px; height:1286px; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div class="text-container">
+  <span id="t1_1" class="t s0_1">Account Statements </span>
+  <span id="t2_1" class="t s1_1">Name </span>
+  <span id="t3_1" class="t s2_1"><%= user.name %> </span>
+  <span id="t4_1" class="t s2_1"><%= user.account_number %> </span>
+  <span id="t5_1" class="t s1_1">Phone Number </span>
+  <span id="t6_1" class="t s2_1"><%= user.email %> </span>
+  <span id="t7_1" class="t s1_1">Account Number </span>
+  <span id="t8_1" class="t s2_1"><%= user.account_number %> </span>
+  <span id="t9_1" class="t s1_1">Total Money In </span>
+  <span id="ta_1" class="t s2_1">₦<%= metrics.totalCredit %> </span>
+  <span id="tb_1" class="t s1_1">Statement Period </span>
+  <span id="tc_1" class="t s2_1"><%= metrics.from %> - <%= metrics.to %> </span>
+  <span id="td_1" class="t s1_1">Total Money Out </span>
+  <span id="te_1" class="t s2_1">₦<%= metrics.totalDebit %> </span>
+  <span id="tf_1" class="t s1_1">Print Time </span>
+  <span id="tg_1" class="t s2_1"><%= metrics.currentDate %> </span>
+  <span id="th_1" class="t s3_1">Transaction Date </span>
+  <span id="ti_1" class="t s4_1">Transaction Detail </span>
+  <span id="tj_1" class="t s4_1">Money In (NGN) </span>
+  <span id="tk_1" class="t s4_1">Money Out (NGN) </span>
+  <span id="tl_1" class="t s4_1">Transaction ID </span>
+  <% transactions.forEach(transaction => { %>
+  <span id="tm_1" class="t s5_1"><%= transaction.created_at %> </span>
+  <span id="tn_1" class="t s2_1"><%= transaction.description %> </span>
+  <span id="to_1" class="t s2_1"><%= transaction.recipient_to_from %> </span>
+  <span id="tp_1" class="t s2_1"><%= transaction.money_out ? '-' + transaction.money_out : '' %> </span>
+  <span id="tq_1" class="t s2_1"><%= transaction.id %> </span>
+  <% }); %>
+</div>
+<!-- End text definitions -->
+
+
+</div>
+</body>
+</html>
