@@ -9,6 +9,7 @@ interface EmailOptions {
   message?: string;
   context?: Record<string, any>;
   template?: string;
+  attachments?: { filename: string; path: string }[];
 }
 
 class EmailService {
@@ -33,6 +34,7 @@ class EmailService {
     message,
     context = {},
     template,
+    attachments,
   }: EmailOptions): Promise<void> {
     let htmlContent = "";
 
@@ -46,6 +48,7 @@ class EmailService {
       subject,
       text: message,
       html: htmlContent,
+      attachments,
     };
 
     const worker = new Worker(
