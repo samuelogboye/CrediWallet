@@ -7,8 +7,6 @@ import {
   getTransactionMetrics,
 } from "../models/transactionModel";
 import {
-  getUserByAccountNumber,
-  getUserByEmail,
   getUserById,
   updateUserBalance,
 } from "../models/userModel";
@@ -17,7 +15,6 @@ import {
   AuthenticatedRequest,
   MetricsType,
   TransactionRequestBody,
-  User,
 } from "../types";
 import { validateAmount } from "../utils/validator";
 import transferEventEmitter from "../events/transferEvents";
@@ -135,7 +132,7 @@ export const transferController = async (
     );
     if (!recipientData) return;
 
-    const { recipient, recipientIdentifier } = recipientData;
+    const { recipient } = recipientData;
 
     if (!(await validateFunds(user, amount, trx, next))) return;
 
@@ -416,11 +413,9 @@ export const sendStatementController = async (
     };
 
     logger.info(`Generating statement for user with ID ${userId}`);
-    // const filePath = await generateStatementCSV(transactions, userId);
     const filePath = await generateStatementPDF(transactions, user, metrics);
 
     logger.info(`Sending statement email to user with ID ${userId}`);
-    // await sendStatementEmail(req.user.email, filePath);
     statementEventEmitter.emit("statement", user, from, to, filePath);
 
     res.status(200).json({

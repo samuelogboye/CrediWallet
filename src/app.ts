@@ -18,9 +18,6 @@ app.use(requestLogger);
 
 setupSwagger(app);
 
-// Cross Origin Resource Sharing
-// app.use(cors(corsOptions));
-
 app.use(bodyParser.json());
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);

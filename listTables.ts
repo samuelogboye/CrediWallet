@@ -1,7 +1,7 @@
 import knex from "knex";
 import knexConfig from "./src/config/knexfile";
 
-const environment = "development"; //config.environment;
+const environment = "development";
 const db = knex(knexConfig[environment]);
 
 async function listTablesAndColumns() {
