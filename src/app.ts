@@ -25,7 +25,7 @@ app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
 app.use("/", (req: Request, res: Response, next: NextFunction): void => {
-  res.json({ message: "Welcome to CrediWallet" });
+  res.json({ message: "Welcome to CrediWallet App" });
 });
 // Global error handler
 app.use(errorHandler);
