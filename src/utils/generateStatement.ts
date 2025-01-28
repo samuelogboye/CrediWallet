@@ -28,7 +28,6 @@ const generateStatementPDF = async (
   metrics: MetricsType
 ): Promise<string> => {
   const filePath = generateFilePath(user.id);
-  console.log("filePath", filePath);
 
   const printer = new pdfmake({
     Roboto: {

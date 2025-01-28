@@ -121,8 +121,6 @@ export const transferController = async (
     if (!user) return;
 
     await validateAmount(amount, userId, next);
-    console.log("recipient_email", recipient_email)
-
 
     const recipientData = await getRecipient(
       { recipient_id, recipient_account_number, recipient_email },

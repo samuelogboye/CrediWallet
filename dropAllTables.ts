@@ -11,7 +11,6 @@ async function dropAllTables() {
     const tables = await db("information_schema.tables")
       .select("table_name")
       .where("table_schema", db.client.database());
-    console.log("tables", tables);
   } catch (error) {
     console.error("Error fetching tables:", error);
   } finally {

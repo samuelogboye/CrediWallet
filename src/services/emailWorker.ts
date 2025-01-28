@@ -5,7 +5,6 @@ async function sendEmail() {
   const transporter = createTransporter();
 
   try {
-    console.log("Hello world");
     await transporter.sendMail(workerData);
     parentPort?.postMessage("Email sent successfully");
   } catch (error) {

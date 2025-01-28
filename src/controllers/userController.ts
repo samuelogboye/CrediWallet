@@ -64,11 +64,9 @@ export const updateUserDetailsController = async (
     // Validate the fields
     logger.info(`Validating update fields for user with ID ${userId}`);
     const fields = Object.keys(updatedFields);
-    console.log("fields", fields)
     const isValidOperation = fields.every((field) =>
       allowedFields.includes(field)
     );
-    console.log("isValidOperation", isValidOperation)
 
     if (!isValidOperation) {
       const invalidFields = fields

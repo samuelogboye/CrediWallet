@@ -53,6 +53,3 @@ logger.add(
 );
 
 export default logger;
-
-// Example usage
-logger.info("Hello World from Node.js!");
