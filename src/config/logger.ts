@@ -43,13 +43,13 @@ const logger = winston.createLogger({
 });
 
 // Add Loggly transport
-logger.add(
-  new Loggly({
-    token: config.loglyToken,
-    subdomain: "samogboye",
-    tags: ["Winston-NodeJS"],
-    json: true,
-  })
-);
+// logger.add(
+//   new Loggly({
+//     token: config.loglyToken,
+//     subdomain: "samogboye",
+//     tags: ["Winston-NodeJS"],
+//     json: true,
+//   })
+// );
 
 export default logger;
