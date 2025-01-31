@@ -1,5 +1,5 @@
 // types/index.d.ts
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 
 // The User type
 export interface User {
